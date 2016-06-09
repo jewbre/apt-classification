@@ -8,20 +8,60 @@ import hr.fer.apt.tests.NBTestBuilder;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class Main {
 
 	public static void main(String[] args) {
-		try {
-			
+//		Main.MultinomialNBNoDomainAdaptation();
+		Main.MultinomialNBDomainAdaptation();
+	}
 
+
+	public static void	MultinomialNBDomainAdaptation() {
+		try {
 			NBTest test = Main.prepareTest(
 					"comp.graphics", Classes.COMP,
-					"sci.space", Classes.SCI,
+					"rec.autos", Classes.REC,
+					"comp.windows.x", "rec.motorcycles",
+					NBTestType.MULTINOMIAL_NBDA
+			);
+
+			System.out.println( "True Positive  | False Positive");
+			System.out.println("--------------------------------");
+			System.out.println( "False Negative | True Negative");
+
+
+			System.out.println("");
+			System.out.println("Calculating...");
+
+			test.runTest();
+
+			System.out.println( test.getTruePositives() + " | " + test.getFalsePositives());
+			System.out.println("-----------------------------------------------------");
+			System.out.println( test.getFalseNegatives() + " | " + test.getTrueNegatives());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void	MultinomialNBNoDomainAdaptation() {
+		try {
+			NBTest test = Main.prepareTest(
+					"comp.graphics", Classes.COMP,
+					"sci.crypt", Classes.SCI,
+					"comp.windows.x", "sci.electronics",
 					NBTestType.MULTINOMIAL_NB
 			);
+
+			System.out.println( "True Positive  | False Positive");
+			System.out.println("--------------------------------");
+			System.out.println( "False Negative | True Negative");
+
+
+			System.out.println("");
+			System.out.println("Calculating...");
+
 			test.runTest();
 
 			System.out.println( test.getTruePositives() + " | " + test.getFalsePositives());
@@ -34,7 +74,10 @@ public class Main {
 	}
 
 
-	public static NBTest prepareTest(String sourceDomain, Classes sourceClass, String additionalDomain, Classes additionalClass, NBTestType type) {
+	public static NBTest prepareTest(String sourceDomain, Classes sourceClass,
+									 String additionalDomain, Classes additionalClass,
+									 String sourceTestDomain, String additionalTestDomain,
+									 NBTestType type) {
 		InvertedIndex main = new InvertedIndex("data/" + sourceDomain + "/train");
 		InvertedIndex diff = new InvertedIndex("data/" + additionalDomain + "/train");
 
@@ -46,7 +89,7 @@ public class Main {
 				diff,
 				Classes.COMP);
 
-		File folder = new File("data/" + additionalDomain + "/test");
+		File folder = new File("data/" + additionalTestDomain + "/test");
 		File[] listOfFiles = folder.listFiles();
 
 		ArrayList<FileTuple> diffDomainTuplles = new ArrayList<>();
@@ -57,7 +100,7 @@ public class Main {
 
 
 
-		folder = new File("data/comp.graphics/test");
+		folder = new File("data/"+ sourceTestDomain + "/test");
 		listOfFiles = folder.listFiles();
 
 		ArrayList<FileTuple> mainDomainTuples = new ArrayList<>();

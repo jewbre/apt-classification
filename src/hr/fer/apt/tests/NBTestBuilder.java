@@ -14,12 +14,18 @@ public class NBTestBuilder {
 
         switch (type) {
             case MULTINOMIAL_NB:
+                MultinomialNBTest t = new MultinomialNBTest();
+                t.setSourceDomain( mainDomain );
+                t.setDiffSourceDomain( diffDomain );
+                t.setTargetClass( targetClass );
+                return t;
+            case MULTINOMIAL_NBDA:
                 default:
-                    MultinomialNBTest t = new MultinomialNBTest();
-                    t.setSourceDomain( mainDomain );
-                    t.setDiffSourceDomain( diffDomain );
-                    t.setTargetClass( targetClass );
-                    return t;
+                    MultinomialDomainNBTest tda = new MultinomialDomainNBTest();
+                    tda.setSourceDomain( mainDomain );
+                    tda.setDiffSourceDomain( diffDomain );
+                    tda.setTargetClass( targetClass );
+                    return tda;
         }
     }
 }
